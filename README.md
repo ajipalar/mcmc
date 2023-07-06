@@ -1,19 +1,28 @@
 # Markov chain Monte Carlo (MCMC)
 
-- T(key, s) :: (key -> s -> s) a Markov transition kernel
-- E(key, s1, s2) :: (key -> s -> s -> (s, s)) an exchange function 
-
 ## Replica exchange Monte Carlo (parallel tempering)
 ### Overview
-Replica exchange Monte Carlo 
+The program is designed to run replica exchange (RE) for a Stan model on a CPU compute cluster. The user should select the following.
+hyper-parameters.
+- The number of replicas
+- The inverse temperature series
+- The save rate
+- The exchange attempt rate
 
-- n-replicas
-- temperature-series
-- save-every
-- exchange-every
-### Parts list
-- $f(x)$ :: (x -> float) a scoring function
-- $u(key, x)$ :: (k -> x -> x) an update function
+### Implementation Notes
+- An RE run is saved in its own directory.
+- System configurations are written to disk.
+- Only the "true" temperature is saved.
+- Other temperatures are saved at the beginning and the end.
+- Scores are saved for all temperatures.
+- Systems are run independently on a single CPU core (no multi-threading).
+- The model should be cached to avoid recompiling it.
+- Exchange attempts are performed locally.
+- SGE jobs are automatically resubmitted.
+- If a job crashes sampling is paused, the chain can be rerun given initial positions.
+- and the random seed.
+- Exchange acceptances are written to their own file. 
+- Should write a few bi-modal examples to test Stan.
 
 
 ## Replica exchange Monte Carlo (parallel tempering) using a Hamiltonian Monte Carlo Kernel
